@@ -6,7 +6,7 @@ Projeto em Python para processamento de dados e extração de informações de a
 
 ## 🚀 Tecnologias utilizadas
 
-* Python 3.x
+* Python 3.13.7
 * NumPy
 * Matplotlib
 * Pytesseract
