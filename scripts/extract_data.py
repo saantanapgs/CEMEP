@@ -26,6 +26,12 @@ def extract_data(file_content):
         file_type = "Termo de declaração"
     elif "ALVARA" in file_content:
         file_type = "Alvará de Soltura"
+    elif "CARTEIRA DE IDENTIDADE" in file_content:
+        file_type = "RG"
+    elif "CARTEIRA NACIONAL DE HABILIT" in file_content:
+        file_type = "CNH"
+    elif "OFICIO" in file_content:
+        file_type = "Ofício"
     else:
         file_type = "Unknow file"
 
