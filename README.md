@@ -115,4 +115,4 @@ CEMEP/
 
 ## 👨‍💻 Autor
 
-Pedro Gustavo Santos de Santana
+* Pedro Gustavo Santos de Santana
