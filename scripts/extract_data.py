@@ -163,9 +163,3 @@ def extract_data(file_content):
     else:
         return "Arquivo nao suportado", None, None
     
-
-# def clean_text(file_content):
-#     file_content = file_content.upper()
-#     file_content = file_content.replace("\n", " ")
-#     file_content = re.sub(r"\s+", " ", file_content)
-#     return file_content
