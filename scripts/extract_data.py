@@ -49,6 +49,16 @@ def extract_termo(file_content):
         file_type = "Termo de substituição"
     elif "DEVOLU" in file_content:
         file_type = "Termo de devolução"
+    elif "DECLARA" in file_content:
+        file_type = "Termo de declaração"
+    elif "ALVARA" in file_content:
+        file_type = "Alvará de Soltura"
+    elif "CARTEIRA DE IDENTIDADE" in file_content:
+        file_type = "RG"
+    elif "CARTEIRA NACIONAL DE HABILIT" in file_content:
+        file_type = "CNH"
+    elif "OFICIO" in file_content:
+        file_type = "Ofício"
     else:
         file_type = "Termo de declaração"
 
@@ -77,7 +87,6 @@ def extract_termo(file_content):
         name = name.split("PROCESSO")[0].strip()
 
     return file_type, name, date
-
 # REGISTRO GERAL
 def extract_rg(file_content):
     name_match = re.search(r"NOME[:\-]?\s*([A-Z\s]+)", file_content)
@@ -154,3 +163,9 @@ def extract_data(file_content):
     else:
         return "Arquivo nao suportado", None, None
     
+
+# def clean_text(file_content):
+#     file_content = file_content.upper()
+#     file_content = file_content.replace("\n", " ")
+#     file_content = re.sub(r"\s+", " ", file_content)
+#     return file_content
