@@ -22,7 +22,8 @@ def match_name(name, folder):
 
     return name_norm in folder_norm
 
-directory = r"C:\Users\Cemep.sejuc\Downloads\CEMEP-main\Scan"
+#directory = r"C:\Users\Cemep.sejuc\Downloads\CEMEP-main\Scan"
+directory = r"C:\Users\Cemep.sejuc\Documents\Cemep automatization\Scan_TESTE"
 
 for files in os.listdir(directory):
     if files.lower().endswith(".pdf"):

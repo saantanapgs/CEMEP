@@ -24,41 +24,32 @@ def detect_file_type(file_content):
     elif "DECLARA" in file_start:
         return "TERMO_DECLARACAO"
     
+    elif re.search(r"MANDADO\s+DE\s+PRIS", file_start):
+        return "MANDADO"
+    
     elif "ALVAR" in file_start:
         return "ALVARA"
     
-    elif "RG" in file_start:
+    elif (r"CARTEIRA\sDE\sIDENTIDADE", file_start):
         return "RG"
     
-    elif "CNH" in file_start:
+    elif re.search(r"DE\s+HABILITA", file_start):
         return "CNH"
-    # elif "OFICIO" in file_content:
-    #     return "Ofício"
+    
     else:
         return "Unknow"
-
+    
 # TERMOS DE SUBSTITUICAO/DECLARACAO/DEVOLUCAO
 def extract_termo(file_content):
     months = {
         "janeiro": "01", "fevereiro": "02", "marco": "03", "abril": "04", "maio": "05","junho": "06",
         "julho": "07", "agosto": "08", "setembro": "09", "outubro": "10","novembro": "11", "dezembro": "12"
     }
-
     # Tipo do termo
     if "SUBSTITUI" in file_content:
         file_type = "Termo de substituição"
     elif "DEVOLU" in file_content:
         file_type = "Termo de devolução"
-    elif "DECLARA" in file_content:
-        file_type = "Termo de declaração"
-    elif "ALVARA" in file_content:
-        file_type = "Alvará de Soltura"
-    elif "CARTEIRA DE IDENTIDADE" in file_content:
-        file_type = "RG"
-    elif "CARTEIRA NACIONAL DE HABILIT" in file_content:
-        file_type = "CNH"
-    elif "OFICIO" in file_content:
-        file_type = "Ofício"
     else:
         file_type = "Termo de declaração"
 
@@ -91,7 +82,7 @@ def extract_termo(file_content):
 def extract_rg(file_content):
     name_match = re.search(r"NOME[:\-]?\s*([A-Z\s]+)", file_content)
     name = name_match.group(1).strip() if name_match else None
-
+    
     return "RG", name, "."
 
 
@@ -104,10 +95,28 @@ def extract_cnh(file_content):
 
 # ALVARA DE SOLTURA
 def extract_alvara(file_content):
+    months = {
+        "janeiro": "01", "fevereiro": "02", "marco": "03", "abril": "04", "maio": "05","junho": "06",
+        "julho": "07", "agosto": "08", "setembro": "09", "outubro": "10","novembro": "11", "dezembro": "12"
+    }
+
+    date_match = re.search(
+        r"(\d{1,2})\s+de\s+([a-zç]+)\s+de\s+(\d{4})",
+        file_content.lower())
+    
+    date = date_match.group(0) if date_match else None
+
+    if date_match:
+        day, written_month,year = date_match.groups()
+        month = months.get(written_month, "00")
+        date = f"{day.zfill(2)}.{month}.{year}"
+    else:
+        date = "."
+
     name_match = re.search(r"PESSOA[:\-]?\s*([A-Z\s]+)(?:CPF|$)", file_content)
     name = name_match.group(1).strip() if name_match else None
 
-    return "Alvará de Soltura", name, "."
+    return "Alvará de Soltura", name, date
 
 # BOLETIM DE OCORRENCIA
 def extract_bo(file_content):
@@ -141,6 +150,13 @@ def extract_bo(file_content):
 
     return "B.O", name, date
 
+def extract_mandado(file_content):
+    
+    name_match = re.search(r"PESSOA[:\-]?\s*([A-Z\s]+)(?:CPF|$)", file_content)
+    name = name_match.group(1).strip() if name_match else None
+
+    return "Mandado de prisão", name, "."
+
 # MAIN FUNCTION
 def extract_data(file_content):
     doc_type = detect_file_type(file_content)
@@ -159,6 +175,9 @@ def extract_data(file_content):
     
     elif doc_type == "BO":
         return extract_bo(file_content)
+    
+    elif doc_type == "MANDADO":
+        return extract_mandado(file_content)
     
     else:
         return "Arquivo nao suportado", None, None
