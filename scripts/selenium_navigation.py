@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import keys
+from login_credentials import login_credentials
 
 # Definindo o navegador
 driver = webdriver.Chrome()
@@ -20,5 +21,9 @@ password = wait.until(
   EC.presence_of_element_located((By.ID, "LoginForm_password"))
 )
 
-user.send_keys("psantana")
-password
+user, password = login_credentials()
+
+login_user.send_keys(user)
+login_password.send_keys(password)
+
+
