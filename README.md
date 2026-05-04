@@ -11,6 +11,7 @@ Projeto em Python para processamento de dados e extração de informações de a
 * Matplotlib
 * Pytesseract
 * pdf2image
+* Selenium
 
 ---
 
