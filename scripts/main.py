@@ -4,6 +4,7 @@ import shutil
 import unicodedata
 from pdf2image import convert_from_path
 from extract_data import extract_data, clean_text
+from selenium_navigation import chronos_login, searching_monitored
 import pytesseract
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
@@ -118,6 +119,11 @@ for files in os.listdir(directory):
             shutil.move(final_path, destination_path)
 
             print(f"Movido para: {destination_path}")
+
+            # Redirecting to Synergye Chronos
+            driver, wait = chronos_login()
+            # Function to search the name of the monitored in chronos
+            searching_monitored(driver, wait, cleaned_name)
             
         else:
             print(f"Pasta do monitorado(a): {cleaned_name} não encontrada.")
