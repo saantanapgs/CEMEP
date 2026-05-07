@@ -26,6 +26,9 @@ def match_name(name, folder):
 #directory = r"C:\Users\Cemep.sejuc\Downloads\CEMEP-main\Scan"
 directory = r"C:\Users\Cemep.sejuc\Documents\Cemep automatization\Scan_TESTE"
 
+# Redirecionando para o site 'Synergye Chronos SE'
+driver, wait = chronos_login()
+
 for files in os.listdir(directory):
     if files.lower().endswith(".pdf"):
         pdf_path = os.path.join(directory, files)
@@ -120,10 +123,8 @@ for files in os.listdir(directory):
 
             print(f"Movido para: {destination_path}")
 
-            # Redirecting to Synergye Chronos
-            driver, wait = chronos_login()
-            # Function to search the name of the monitored in chronos
-            searching_monitored(driver, wait, cleaned_name)
+            # Função pra pesquisar o monitorado no chronos
+            searching_monitored(driver, wait, cleaned_name, final_name, destination_path)
             
         else:
             print(f"Pasta do monitorado(a): {cleaned_name} não encontrada.")

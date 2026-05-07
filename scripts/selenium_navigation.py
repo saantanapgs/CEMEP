@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from login_credentials import user, password
+import time
 
 #print("Acessando o site")
 def chronos_login():
@@ -46,16 +47,23 @@ def chronos_login():
 
   return driver, wait
 # Pesquisando o nome do monitorado que consta no arquivo renomeado pelo main.py
-def searching_monitored(driver, wait, cleaned_name):
+def searching_monitored(driver, wait, cleaned_name, final_name, destination_path):
+  # Voltando para o default Iframe para evitar erros
+  driver.switch_to.default_content()
+
   monitored_name_reference = wait.until(
       EC.element_to_be_clickable((By.ID, "Pessoa_pessoa_nome"))
   )
   monitored_name_reference.send_keys(cleaned_name)
   monitored_name_reference.send_keys(Keys.ENTER)
 
+  # Esperando a tabela atualizar
+  wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//a[contais(@class='view')]"))
+  )
   # Clicando no botão para abrir o perfil do monitorado
   view_btn = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//a[@class='view']"))
+    EC.element_to_be_clickable((By.XPATH, "//a[contais(@class='view')]"))
   )
   view_btn.click()
   
@@ -67,27 +75,53 @@ def searching_monitored(driver, wait, cleaned_name):
 
   # Clicando para criar novo arquivo
   new_file_btn = wait.until(
-    EC.element_to_be_clickable((By.XPATH, "//input[contains(@onclick, 'openFileModal')]"))
+      EC.element_to_be_clickable((By.XPATH, "//input[contains(@onclick, 'openFileModal')]"))
   )
   new_file_btn.click()
 
-  # Expandindo o select chamado 'Categoria do Arquivo'
-  inputs = driver.find_elements(By.XPATH, "//input[@aria-label='Categoria do Arquivo']")
+  # Adicionando delay após clicar em 'Novo'
+  time.sleep(2)
 
-  print(f"Quantidade encontrada: {len(inputs)}")
-
-  for i, inp in enumerate(inputs):
-    print(i, inp.is_displayed(), inp.is_enabled())
-
-  # Clicando em 'Documentos' dentro do select
-  documents_option = wait.until(
-      EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'Documentos')]"))
+  # Entrando no iframe
+  wait.until(
+    EC.frame_to_be_available_and_switch_to_it(
+        (By.TAG_NAME, "iframe")
+      )
   )
+
+  # Abrindo select
+  categoria = wait.until(
+      EC.presence_of_element_located((By.XPATH, "//div[contains(@class,'v-select__selections')]"))
+  )
+
+  driver.execute_script("arguments[0].click();", categoria)
+
+  # Selecionando Documentos
+  documents_option = wait.until(
+      EC.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Documentos')]"))
+  )
+
   documents_option.click()
 
-  file_name = wait.until(
-    EC.visibility_of_element_located((By.XPATH, "//input[@aria-label='Nome do arquivo']"))
+  # Digitando nome do arquivo
+  file_name_input = wait.until(
+      EC.visibility_of_element_located((By.XPATH, "//input[@aria-label='Nome do Arquivo']"))
   )
-  file_name.send_keys(file_name)
 
-  input("...")
+  file_name_input.send_keys(final_name)
+
+  upload_input = wait.until(
+    EC.presence_of_element_located((By.ID, "file"))
+  )
+
+  upload_input.send_keys(destination_path)
+
+  time.sleep(2)
+  save_btn = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'v-btn__content')]"))
+  )
+  save_btn.click()
+
+  driver.switch_to.default_content()
+
+  driver.get("https://se.synergye.com.br/index.php?r=pessoa")
