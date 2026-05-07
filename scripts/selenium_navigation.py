@@ -51,4 +51,43 @@ def searching_monitored(driver, wait, cleaned_name):
       EC.element_to_be_clickable((By.ID, "Pessoa_pessoa_nome"))
   )
   monitored_name_reference.send_keys(cleaned_name)
+  monitored_name_reference.send_keys(Keys.ENTER)
+
+  # Clicando no botão para abrir o perfil do monitorado
+  view_btn = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//a[@class='view']"))
+  )
+  view_btn.click()
+  
+  # Clicando na sessão de 'Arquivos'
+  files_btn = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//a[@href='#arquivoPessoaTab']"))
+  )
+  files_btn.click()
+
+  # Clicando para criar novo arquivo
+  new_file_btn = wait.until(
+    EC.element_to_be_clickable((By.XPATH, "//input[contains(@onclick, 'openFileModal')]"))
+  )
+  new_file_btn.click()
+
+  # Expandindo o select chamado 'Categoria do Arquivo'
+  inputs = driver.find_elements(By.XPATH, "//input[@aria-label='Categoria do Arquivo']")
+
+  print(f"Quantidade encontrada: {len(inputs)}")
+
+  for i, inp in enumerate(inputs):
+    print(i, inp.is_displayed(), inp.is_enabled())
+
+  # Clicando em 'Documentos' dentro do select
+  documents_option = wait.until(
+      EC.visibility_of_element_located((By.XPATH, "//*[contains(text(), 'Documentos')]"))
+  )
+  documents_option.click()
+
+  file_name = wait.until(
+    EC.visibility_of_element_located((By.XPATH, "//input[@aria-label='Nome do arquivo']"))
+  )
+  file_name.send_keys(file_name)
+
   input("...")
