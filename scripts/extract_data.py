@@ -78,6 +78,7 @@ def extract_termo(file_content):
         name = name.split("PROCESSO")[0].strip()
 
     return file_type, name, date
+
 # REGISTRO GERAL
 def extract_rg(file_content):
     name_match = re.search(r"NOME[:\-]?\s*([A-Z\s]+)", file_content)
@@ -140,7 +141,7 @@ def extract_bo(file_content):
 
     # Nome do monitorado/vítima
     name_match = re.search(
-        r"NOME CIVIL[:\-]?\s*([A-Z\s]+?)(?:\(|$)",
+        r"CIVIL[:\-]?\s*([A-Z\s]+?)(?:\(|$)",
         file_content
     )
     name = name_match.group(1).strip() if name_match else None

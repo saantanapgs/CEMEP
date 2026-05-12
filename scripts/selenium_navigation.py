@@ -58,6 +58,8 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
   monitored_name_reference.send_keys(cleaned_name)
   monitored_name_reference.send_keys(Keys.ENTER)
   time.sleep(2)
+  monitored_name_reference.clear()
+  
 
   # Esperando a tabela atualizar
   wait.until(
@@ -67,6 +69,7 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
   view_btn = wait.until(
     EC.element_to_be_clickable((By.XPATH, "//a[contains(@class,'view')]"))
   )
+  time.sleep(2)
   view_btn.click()
   
   # Clicando na sessão de 'Arquivos'
