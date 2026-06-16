@@ -112,19 +112,6 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
                 print("\nMonitorado localizado:")
                 print(texto_linha)
 
-                confirmacao = input(
-                    "\nConfirmar upload para este monitorado? (S/N): "
-                )
-
-                if confirmacao.upper() != "S":
-                    print("Upload cancelado pelo operador.")
-
-                    driver.get(
-                        "https://se.synergye.com.br/index.php?r=pessoa"
-                    )
-
-                    return
-
                 view_btn = linha.find_element(
                     By.XPATH,
                     ".//a[contains(@class,'view')]"
@@ -231,6 +218,25 @@ def searching_monitored(driver, wait, cleaned_name, final_name, destination_path
     upload_input.send_keys(destination_path)
 
     time.sleep(2)
+
+    print("\n========================================")
+    print(f"MONITORADO: {cleaned_name}")
+    print(f"ARQUIVO: {final_name}")
+    print("Tudo pronto para anexar.")
+    print("========================================")
+
+    confirmacao = input("Confirmar upload? (S/N): ").strip().upper()
+
+    if confirmacao != "S":
+        print("Upload cancelado pelo operador.")
+
+        driver.switch_to.default_content()
+
+        driver.get(
+            "https://se.synergye.com.br/index.php?r=pessoa"
+        )
+
+        return
 
     # Salvar
     save_btn = wait.until(
